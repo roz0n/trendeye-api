@@ -1,5 +1,5 @@
 const cheerio = require("cheerio");
-const request = require("request")
+const request = require("request");
 
 const Country = require("../models/Country");
 const Studio = require("../models/Studio");
@@ -37,6 +37,10 @@ class Scraper {
               }${i}`;
               const studioName = $(el).text().trim();
               const studioQty = +studioName.match(/\((.*?)\)/)[1] || null;
+              const studioUrl = $(el).next().find("a").attr("href");
+              const studioEndpoint =
+                studioUrl &&
+                studioUrl.substr(studioFullUrl.lastIndexOf("/") + 1);
 
               let sanitizedName = studioName
                 .replace(studioName.match(/\((.*?)\)/)[0], "")
@@ -51,7 +55,8 @@ class Scraper {
                 i,
                 studioId,
                 sanitizedName || studioName,
-                studioQty
+                studioQty,
+                studioEndpoint
               );
 
               countryData.studios.list.push(studioData);
@@ -67,6 +72,8 @@ class Scraper {
       });
     });
   }
+
+  static get trends() {}
 }
 
 module.exports = Scraper;
