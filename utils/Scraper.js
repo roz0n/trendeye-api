@@ -1,7 +1,6 @@
 const cheerio = require("cheerio");
 const request = require("request");
 const _ = require("lodash");
-
 const CountryCodes = require("../data/countryCodes");
 const Country = require("../models/Country");
 const Studio = require("../models/Studio");
