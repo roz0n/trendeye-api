@@ -1,6 +1,7 @@
-const Work = function (name, url, source) {
-  this.name = name;
+const Work = function (title, url, images, source) {
+  this.title = title;
   this.url = url;
+  this.images = images;
   this.source = source;
 };
 

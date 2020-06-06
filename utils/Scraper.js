@@ -63,13 +63,16 @@ class StudioScraper extends Scraper {
             const allStudioWorks = studioWorks.find("li");
 
             allStudioWorks.map((i, el) => {
-              const workName = $(el).find("a").find("img").attr("alt").trim();
+              const workTitle = $(el).find("a").find("img").attr("alt").trim();
               const workUrl = $(el).find("a").attr("href");
-              // TODO: This will require another request to the workUrl
-              const workSource = null;
-              const workData = new Work(workName, workUrl, workSource);
+              const workImage = $(el).find("a").find("img").attr("src");
+              const workImages = {
+                sm: workImage,
+                lg: workImage.replace("small", "big"),
+              };
+              const formedWorkData = new Work(workTitle, workUrl, workImages);
 
-              responseData.works.push(_.omitBy(workData, _.isNil));
+              responseData.works.push(_.omitBy(formedWorkData, _.isNil));
             });
 
             resolve([responseData]);
@@ -113,7 +116,6 @@ class StudioScraper extends Scraper {
               const studioUrl = $(el).find("a").attr("href");
               const studioEndpoint =
                 studioUrl && studioUrl.substr(studioUrl.lastIndexOf("/") + 1);
-
               let sanitizedName = studioName
                 .replace(studioName.match(/\((.*?)\)/)[0], "")
                 .trim();
