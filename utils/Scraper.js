@@ -5,12 +5,42 @@ const Country = require("../models/Country");
 const Studio = require("../models/Studio");
 const CountryCodes = require("../data/countryCodes");
 
-class Scraper {
-  static get studios() {
-    const url = `https://www.trendlist.org/studios`;
+const resources = {
+  studios: "studios",
+  trends: "trends",
+  countries: "country",
+};
 
+class Scraper {
+  static url = (resource, endpoint) => {
+    if (!resource) {
+      return null;
+    } else {
+      return endpoint
+        ? `https://www.trendlist.org/${resource}/${endpoint}`
+        : `https://www.trendlist.org/${resource}`;
+    }
+  };
+}
+
+class StudioScraper extends Scraper {
+  static byName(name) {
+		console.log("Obtaining studio", name);
     return new Promise((resolve, reject) => {
-      request(url, function (error, response, html) {
+			request(Scraper.url(resources.studios, name), function (error, response, html) {
+				if (!error && response.statusCode == 200) {
+					const $ = cheerio.load(html);
+					let responseData = [];
+
+					console.log(html);
+				}
+			});
+    });
+  }
+
+  static all() {
+    return new Promise((resolve, reject) => {
+      request(Scraper.url(resources.studios), function (error, response, html) {
         if (!error && response.statusCode == 200) {
           const $ = cheerio.load(html);
           const trendlistCountries = $("#trendsleft > .columns > h2");
@@ -37,10 +67,9 @@ class Scraper {
               }${i}`;
               const studioName = $(el).text().trim();
               const studioQty = +studioName.match(/\((.*?)\)/)[1] || null;
-              const studioUrl = $(el).next().find("a").attr("href");
+              const studioUrl = $(el).find("a").attr("href");
               const studioEndpoint =
-                studioUrl &&
-                studioUrl.substr(studioFullUrl.lastIndexOf("/") + 1);
+                studioUrl && studioUrl.substr(studioUrl.lastIndexOf("/") + 1);
 
               let sanitizedName = studioName
                 .replace(studioName.match(/\((.*?)\)/)[0], "")
@@ -72,8 +101,10 @@ class Scraper {
       });
     });
   }
-
-  static get trends() {}
 }
 
-module.exports = Scraper;
+class TrendScraper extends Scraper {}
+
+module.exports = {
+  StudioScraper,
+};

@@ -1,12 +1,24 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-
-const Scrape = require("../utils/Scraper");
+const ScrapeUtils = require("../utils/Scraper");
+const { StudioScraper } = ScrapeUtils;
 
 router.get("/", async (req, res) => {
   try {
-    const response = await Scrape.studios;
-    res.status(200).send({ success: true, data: response });
+    const response = await StudioScraper.all();
+    res.send({ success: true, data: response });
+  } catch (error) {
+    res.status(500).send({ error: true, message: error.message });
+  }
+});
+
+router.get("/:name", async (req, res) => {
+  try {
+    const {name} = req.params;
+    if (!name) throw new Error("No studio name provided");
+    
+    const response = await StudioScraper.byName(req.params.name);
+    res.send({ success: true, data: response });
   } catch (error) {
     res.status(500).send({ error: true, message: error.message });
   }

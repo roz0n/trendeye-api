@@ -14,5 +14,4 @@ app.use(cookieParser());
 app.use("/studios", studiosRouter);
 app.use("/trends", trendsRouter);
 
-
 module.exports = app;
