@@ -1,5 +1,6 @@
 const cheerio = require("cheerio");
 const request = require("request");
+const _ = require("lodash");
 
 const CountryCodes = require("../data/countryCodes");
 const Country = require("../models/Country");
@@ -26,8 +27,6 @@ class Scraper {
 
 class StudioScraper extends Scraper {
   getStudioByName(name) {
-    console.log("Obtaining studio", name);
-
     return new Promise((resolve, reject) => {
       request(
         this.url(this.resources.studios, name),
@@ -43,12 +42,22 @@ class StudioScraper extends Scraper {
             // TODO: This is an wrapped text node at the end of the tree
             const studioDesc = null;
             const studioUrl = studioInfo.find("a").first().text();
-            const studioCountry = studioInfo.find("a").last().text();
+            const studioCountryName = studioInfo.find("a").last().text();
+            const studioCountryCode = CountryCodes.find(
+              (country) =>
+                studioCountryName.toLowerCase() === country.name.toLowerCase()
+            );
+            const studioCountryData = new Country(
+              null,
+              studioCountryName,
+              studioCountryCode && studioCountryCode.iso,
+              null
+            );
 
             responseData.info.name = studioName;
             responseData.info.desc = studioDesc;
             responseData.info.url = studioUrl;
-            responseData.info.country = studioCountry;
+            responseData.info.country = _.omitBy(studioCountryData, _.isNil);
 
             // Get studio works
             const allStudioWorks = studioWorks.find("li");
@@ -58,8 +67,9 @@ class StudioScraper extends Scraper {
               const workUrl = $(el).find("a").attr("href");
               // TODO: This will require another request to the workUrl
               const workSource = null;
+              const workData = new Work(workName, workUrl, workSource);
 
-              responseData.works.push(new Work(workName, workUrl, workSource));
+              responseData.works.push(_.omitBy(workData, _.isNil));
             });
 
             resolve([responseData]);
@@ -82,7 +92,7 @@ class StudioScraper extends Scraper {
           trendlistCountries.each((i, el) => {
             const countryName = $(el).text().toLowerCase().trim();
             const countryCode = CountryCodes.find(
-              (country) => countryName == country.name.toLowerCase()
+              (country) => countryName === country.name.toLowerCase()
             );
             const countryData = new Country(
               i,
