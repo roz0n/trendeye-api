@@ -1,7 +1,7 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
-import studiosRouter from "./routes/studios";
+import {router as studiosRouter} from "./routes/studios";
 // import trendsRouter from "./routes/trends";
 
 const app = express();
@@ -15,6 +15,8 @@ app.use(cookieParser());
 app.use("/studios", studiosRouter);
 // app.use("/trends", trendsRouter);
 
-app.listen(PORT, () => console.log(`Example app listening at http://localhost:${PORT}`))
+app.listen(PORT, () =>
+  console.log(`Trendlist API listening at http://localhost:${PORT}`)
+);
 
 export default app;

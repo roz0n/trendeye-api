@@ -4,6 +4,13 @@ import { StudioScraper } from "../utils/Scraper";
 const router = Router();
 const scraper = new StudioScraper();
 
+router.get(
+  "/",
+  async (err: Error, req: Request, res: Response, next: NextFunction) => {
+    res.send({ success: true })
+  }
+);
+
 // router.get(
 //   "/",
 //   async (err: Error, req: Request, res: Response, next: NextFunction) => {
@@ -17,9 +24,8 @@ const scraper = new StudioScraper();
 // );
 
 router.get(
-  "/",
-  async (err: Error, req: Request, res: Response, next: NextFunction) => {
-    console.log("HITTING");
+  "/:name",
+  async (req: Request, res: Response) => {
     try {
       const { name } = req.params;
       if (!name) throw new Error("No studio name provided");
@@ -32,4 +38,4 @@ router.get(
   }
 );
 
-export default router;
+export {router};
