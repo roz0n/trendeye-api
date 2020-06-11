@@ -1,19 +1,10 @@
-// import { Request, Response, NextFunction } from "express";
-// import { Router } from "express";
-// import ScrapeUtils from "../utils/Scraper";
+import { Request, Response } from "express";
+import { Router } from "express";
 
-// const router = Router();
+const router = Router();
 
-// router.get(
-//   "/",
-//   async (err: Error, req: Request, res: Response, next: NextFunction) => {
-//     try {
-//       const response = await ScrapeUtils.StudioScraper.allByCountry;
-//       res.send({ success: true, data: response });
-//     } catch (error) {
-//       res.status(500).send({ error: true, message: error.message });
-//     }
-//   }
-// );
+router.get("/", async (req: Request, res: Response) => {
+  res.send({ success: true });
+});
 
-// module.exports = router;
+export { router };
