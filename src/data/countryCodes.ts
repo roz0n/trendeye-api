@@ -1,3 +1,8 @@
+export type CountryCode = {
+  name: string,
+  iso: string
+}
+
 export const countryCodes: { name: string; iso: string }[] = [
   { name: "Afghanistan", iso: "AF" },
   { name: "Åland Islands", iso: "AX" },

@@ -1,7 +1,7 @@
 import Studio from "../models/Studio";
 
 type CountryStudiosListing = {
-  count: number;
+  count: number | null;
   list: Studio[];
 };
 

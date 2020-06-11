@@ -2,9 +2,9 @@ import cheerio from "cheerio";
 import _ from "lodash";
 import request from "request";
 import Country from "../models/Country";
-import Work from "../models/Work";
+import Work, { WorkImageLinks } from "../models/Work";
 import Studio from "../models/Studio";
-import { countryCodes } from "../data/countryCodes";
+import { CountryCode, countryCodes } from "../data/countryCodes";
 import { ResourceTypes, ResponseData } from "../types/scraper";
 
 class ScraperResponse {
@@ -37,65 +37,60 @@ class Scraper {
 
 export class StudioScraper extends Scraper {
   getStudioByName(name: string) {
-    if (name) {
-      return new Promise((resolve, reject) => {
-        request(
-          this.url(this.resources.studios, name)!,
-          (error: Error, response: request.Response, html: string) => {
-            if (!error && response.statusCode == 200) {
-              const $ = cheerio.load(html);
-              const studioInfo = $("#trendsright > .trendsinfo");
-              const studioWorks = $("#trendsleft > .trends");
+    return new Promise((resolve, reject) => {
+      request(
+        this.url(this.resources.studios, name)!,
+        (error: Error, response: request.Response, html: string) => {
+          if (!error && response.statusCode == 200) {
+            const $ = cheerio.load(html);
+            const studioInfo = $("#trendsright > .trendsinfo");
+            const studioWorks = $("#trendsleft > .trends");
 
-              // Get studio info
-              const studioName = studioInfo.find("h1").text();
-              const studioDesc = null;
-              const studioUrl = studioInfo.find("a").first().text();
-              const studioCountryName = studioInfo.find("a").last().text();
-              const studioCountryCode = countryCodes.find(
-                // TODO: update
-                (country: any) =>
-                  studioCountryName.toLowerCase() === country.name.toLowerCase()
-              );
-              const studioCountryData = new Country(
-                studioCountryName,
-                (studioCountryCode && studioCountryCode.iso)!
-              );
+            // Get studio info
+            const studioName = studioInfo.find("h1").text();
+            const studioDesc = null;
+            const studioUrl = studioInfo.find("a").first().text();
+            const studioCountryName = studioInfo.find("a").last().text();
+            const studioCountryCode = countryCodes.find(
+              (country: CountryCode) =>
+                studioCountryName.toLowerCase() === country.name.toLowerCase()
+            );
+            const studioCountryData = new Country(
+              studioCountryName,
+              (studioCountryCode && studioCountryCode.iso)!
+            );
+            const responseData = new ScraperResponse({
+              info: {
+                name: studioName,
+                desc: studioDesc,
+                url: studioUrl,
+                country: studioCountryData,
+              },
+              works: [],
+            });
 
-              const responseData = new ScraperResponse({
-                info: {
-                  name: studioName,
-                  desc: studioDesc,
-                  url: studioUrl,
-                  country: studioCountryData,
-                },
-                works: [],
-              });
+            // Get studio works
+            const allStudioWorks = studioWorks.find("li");
+            allStudioWorks.map((i, el) => {
+              const workUrl = $(el).find("a").attr("href") || "";
+              const workTitle = $(el).find("a").find("img").attr("alt") || "";
+              const workImageLink =
+                $(el).find("a").find("img").attr("src") || "";
+              const workImages: WorkImageLinks = {
+                sm: workImageLink,
+                lg: workImageLink.replace("small", "big"),
+              };
+              const formedWorkData = new Work(workTitle, workUrl, workImages);
+              responseData.works.push(_.omitBy(formedWorkData, _.isNil));
+            });
 
-              // Get studio works
-              const allStudioWorks = studioWorks.find("li");
-
-              allStudioWorks.map((i, el) => {
-                const workUrl = $(el).find("a").attr("href") || "";
-                let workTitle = $(el).find("a").find("img").attr("alt") || "";
-                let workImage = $(el).find("a").find("img").attr("src") || "";
-                const workImages = {
-                  sm: workImage && workImage,
-                  lg: workImage && workImage.replace("small", "big"),
-                };
-                const formedWorkData = new Work(workTitle, workUrl, workImages);
-
-                responseData.works.push(_.omitBy(formedWorkData, _.isNil));
-              });
-
-              resolve([responseData]);
-            } else {
-              reject(new Error("Error fetching studio"));
-            }
+            resolve([responseData]);
+          } else {
+            reject(new Error("Error fetching studio"));
           }
-        );
-      });
-    }
+        }
+      );
+    });
   }
 
   getAllStudiosByCountry() {
@@ -106,7 +101,7 @@ export class StudioScraper extends Scraper {
           if (!error && response.statusCode == 200) {
             const $ = cheerio.load(html);
             const trendlistCountries = $("#trendsleft > .columns > h2");
-            let responseData = [];
+            const responseData: Country[] = [];
 
             trendlistCountries.each((i, el) => {
               const countryName = $(el).text().toLowerCase().trim();
@@ -121,30 +116,32 @@ export class StudioScraper extends Scraper {
 
               countryData.studios["count"] = countryStudios.length;
               countryData.studios.list = [];
-
               countryStudios.each((i, el) => {
                 const studioId = `${
                   (countryCode && countryCode.iso) || countryName
                 }${i}`;
+                // Some of the code here is brittle, lots of non-null assertions here for the sake of silencing the compiler
                 const studioName = $(el).text().trim();
-                const studioQty = +studioName.match(/\((.*?)\)/)[1] || null;
                 const studioUrl = $(el).find("a").attr("href");
+                const studioQuantity = +studioName?.match(/\((.*?)\)/)![1] || 0;
                 const studioEndpoint =
-                  studioUrl && studioUrl.substr(studioUrl.lastIndexOf("/") + 1);
-                let sanitizedName = studioName
-                  .replace(studioName.match(/\((.*?)\)/)[0], "")
-                  .trim();
+                  studioUrl?.substr(studioUrl.lastIndexOf("/") + 1) || "";
 
-                if (sanitizedName.includes("(")) {
-                  const leftovers = sanitizedName.match(/\((.*?)\)/)[0] || "";
-                  sanitizedName = sanitizedName.replace(leftovers, "").trim();
+                // This can be a util or a helper
+                let sanitizedName =
+                  studioName
+                    ?.replace(studioName?.match(/\((.*?)\)/)![0], "")!
+                    .trim() || "";
+                if (sanitizedName && sanitizedName?.includes("(")) {
+                  const leftovers = sanitizedName!.match(/\((.*?)\)/)![0] || "";
+                  sanitizedName = sanitizedName!.replace(leftovers, "")!.trim();
                 }
 
                 const studioData = new Studio(
                   i,
                   studioId,
                   sanitizedName || studioName,
-                  studioQty,
+                  studioQuantity,
                   studioEndpoint
                 );
 
