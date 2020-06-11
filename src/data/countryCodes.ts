@@ -1,4 +1,4 @@
-module.exports = [
+export const countryCodes: { name: string; iso: string }[] = [
   { name: "Afghanistan", iso: "AF" },
   { name: "Åland Islands", iso: "AX" },
   { name: "Albania", iso: "AL" },
