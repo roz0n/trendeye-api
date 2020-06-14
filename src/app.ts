@@ -16,7 +16,7 @@ app.use("/studios", studiosRouter);
 app.use("/trends", trendsRouter);
 
 app.listen(PORT, () =>
-  console.log(`Trendlist API listening at http://localhost:${PORT}`)
+  console.log(`🔵 Trendlist API listening at http://localhost:${PORT}`)
 );
 
 export default app;

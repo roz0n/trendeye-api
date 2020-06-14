@@ -5,7 +5,7 @@ import Country from "../models/Country";
 import Work, { WorkImageLinks } from "../models/Work";
 import Studio from "../models/Studio";
 import { CountryCode, countryCodes } from "../data/countryCodes";
-import { ResourceTypes, ResponseData } from "../types/scraper";
+import { ResourceTypes, ResponseData } from "../types/scraperController.types";
 
 class ScraperResponse {
   info: ResponseData;
@@ -17,7 +17,7 @@ class ScraperResponse {
   }
 }
 
-class Scraper {
+class ScraperController {
   resources: ResourceTypes = {
     studios: "studios",
     trends: "trends",
@@ -33,9 +33,30 @@ class Scraper {
         : `https://www.trendlist.org/${resource}`;
     }
   };
+
+  scrape(
+    resource: string,
+    endpoint: string,
+    callback: ($: CheerioStatic) => any[] | {}
+  ) {
+    return new Promise((reject, resolve) => {
+      request(
+        this.url(resource, endpoint)!,
+        (error: Error, response: request.Response, html: string) => {
+          if (!error && response.statusCode == 200) {
+            const $ = cheerio.load(html);
+            const result = callback($);
+            resolve(result);
+          } else {
+            reject(new Error("Scrape failed"));
+          }
+        }
+      );
+    });
+  }
 }
 
-export class StudioScraper extends Scraper {
+export class StudioScraper extends ScraperController {
   getStudioByName(name: string) {
     return new Promise((resolve, reject) => {
       request(
@@ -73,12 +94,13 @@ export class StudioScraper extends Scraper {
             const allStudioWorks = studioWorks.find("li");
             allStudioWorks.map((i, el) => {
               const workUrl = $(el).find("a").attr("href") || "";
-              const workTitle = $(el).find("a").find("img").attr("alt") || "";
+              const workTitle =
+                $(el).find("a").find("img").attr("alt")?.trim() || "";
               const workImageLink =
                 $(el).find("a").find("img").attr("src") || "";
               const workImages: WorkImageLinks = {
-                sm: workImageLink,
-                lg: workImageLink.replace("small", "big"),
+                small: workImageLink,
+                large: workImageLink.replace("smallall", "big"),
               };
               const formedWorkData = new Work(workTitle, workUrl, workImages);
               responseData.works.push(_.omitBy(formedWorkData, _.isNil));
@@ -93,7 +115,7 @@ export class StudioScraper extends Scraper {
     });
   }
 
-  getAllStudiosByCountry() {
+  getAllStudios() {
     return new Promise((resolve, reject) => {
       request(
         this.url(this.resources.studios)!,
@@ -117,9 +139,6 @@ export class StudioScraper extends Scraper {
               countryData.studios["count"] = countryStudios.length;
               countryData.studios.list = [];
               countryStudios.each((i, el) => {
-                const studioId = `${
-                  (countryCode && countryCode.iso) || countryName
-                }${i}`;
                 // Some of the code here is brittle, lots of non-null assertions here for the sake of silencing the compiler
                 const studioName = $(el).text().trim();
                 const studioUrl = $(el).find("a").attr("href");
@@ -139,7 +158,6 @@ export class StudioScraper extends Scraper {
 
                 const studioData = new Studio(
                   i,
-                  studioId,
                   sanitizedName || studioName,
                   studioQuantity,
                   studioEndpoint
@@ -156,6 +174,26 @@ export class StudioScraper extends Scraper {
             reject(new Error("Error scraping data"));
           }
         }
+      );
+    });
+  }
+}
+
+export class TrendScraper extends ScraperController {
+  getTrendByName(name: string) {
+    return new Promise((reject, resolve) => {
+      request(
+        this.url(this.resources.trends, name)!,
+        (error: Error, response: request.Response, html: string) => {}
+      );
+    });
+  }
+
+  getAllTrends() {
+    return new Promise((reject, resolve) => {
+      request(
+        this.url(this.resources.trends, name)!,
+        (error: Error, response: request.Response, html: string) => {}
       );
     });
   }

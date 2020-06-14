@@ -1,6 +1,6 @@
 export type WorkImageLinks = {
-  sm?: string;
-  lg?: string;
+  small?: string;
+  large?: string;
 };
 
 class Work {

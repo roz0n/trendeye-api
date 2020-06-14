@@ -7,16 +7,16 @@ type CountryStudiosListing = {
 
 class Country {
   name: string;
-  isoCode: string;
+  iso_code: string;
   studios: CountryStudiosListing;
 
   constructor(
     name: string,
-    isoCode: string,
+    iso_code: string,
     studios: CountryStudiosListing = { count: null, list: [] }
   ) {
     this.name = name;
-    this.isoCode = isoCode;
+    this.iso_code = iso_code;
     this.studios = studios;
   }
 }
