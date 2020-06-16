@@ -20,7 +20,7 @@ class ScraperResponse {
 class ScraperController {
   resources: ResourceTypes = {
     studios: "studios",
-    trends: "trends",
+    trends: "trends/frame",
     countries: "country",
   };
 
@@ -184,7 +184,11 @@ export class TrendScraper extends ScraperController {
     return new Promise((reject, resolve) => {
       request(
         this.url(this.resources.trends, name)!,
-        (error: Error, response: request.Response, html: string) => {}
+        (error: Error, response: request.Response, html: string) => {
+          if (!error && response.statusCode == 200) {
+            const $ = cheerio.load(html);
+          }
+        }
       );
     });
   }
@@ -192,8 +196,16 @@ export class TrendScraper extends ScraperController {
   getAllTrends() {
     return new Promise((reject, resolve) => {
       request(
-        this.url(this.resources.trends, name)!,
-        (error: Error, response: request.Response, html: string) => {}
+        this.url(this.resources.trends)!,
+        (error: Error, response: request.Response, html: string) => {
+          if (!error && response.statusCode == 200) {
+            const $ = cheerio.load(html);
+            console.log("Response:", html);
+            resolve({ dummy: "Dummy data" });
+          } else {
+            reject(new Error("Error scraping data"));
+          }
+        }
       );
     });
   }
