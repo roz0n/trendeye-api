@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { StudioScraper } from "../controllers/ScraperController";
+import { StudioScraper } from "../services/ScraperService";
 
 const router = Router();
 const scraper = new StudioScraper();

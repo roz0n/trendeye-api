@@ -1,4 +1,4 @@
-import { Scraper } from './../types/scraperController.types';
+import { Scraper } from '../types/scrapeService.types';
 import cheerio from "cheerio";
 import _ from "lodash";
 import request from "request";
@@ -6,7 +6,9 @@ import Country from "../models/Country";
 import Work, { WorkImageLinks } from "../models/Work";
 import Studio from "../models/Studio";
 import { CountryCode, countryCodes } from "../data/countryCodes";
-import { ResourceTypes, ResponseData } from "../types/scraperController.types";
+import { ResourceTypes, ResponseData } from "../types/scrapeService.types";
+import jsdom from "jsdom";
+const { JSDOM } = jsdom;
 
 class ScraperResponse {
   info: ResponseData;
@@ -18,7 +20,7 @@ class ScraperResponse {
   }
 }
 
-class ScraperController {
+class ScraperService {
   resources: ResourceTypes = {
     latest: "",
     studios: "studios",
@@ -58,7 +60,7 @@ class ScraperController {
   }
 }
 
-export class StudioScraper extends ScraperController {
+export class StudioScraper extends ScraperService {
   getStudioByName(name: string) {
     return new Promise((resolve, reject) => {
       request(
@@ -181,7 +183,7 @@ export class StudioScraper extends ScraperController {
   }
 }
 
-export class TrendScraper extends ScraperController {
+export class TrendScraper extends ScraperService {
   getTrendByName(name: string) {
     return new Promise((reject, resolve) => {
       request(
@@ -215,19 +217,33 @@ export class TrendScraper extends ScraperController {
   }
 }
 
-export class LatestScraper extends ScraperController {
-  getLatestPosts() {
-    console.log("Fetching...", this.url(this.resources.latest));
+export class LatestScraper extends ScraperService {
 
+  getLatestPosts() {
     return new Promise((resolve, reject) => {
       request(
         this.url(this.resources.latest)!,
         (error: Error, response: request.Response, html: string) => {
 
           if (!error && response.statusCode == 200) {
-            const $ = cheerio.load(html);
-            console.log("Got Response:", html);
-            resolve({ dummy: "Dummy data" });
+            const dom = new JSDOM(html);
+            const { document } = dom.window;
+
+            const imageList = document.querySelector(".index");
+            const images = imageList?.getElementsByClassName("big");
+            
+            const responseData: { id: number, url: string | null | undefined }[] = [];
+
+            if (images) {
+              for (let i = 0; i < images.length; i++) {
+                const image = images[i].firstElementChild?.firstElementChild;
+                const link = image?.getAttribute("src");
+
+                responseData.push({ id: responseData.length, url: link })
+              }
+            }
+
+            resolve({ data: responseData });
           } else {
             console.log("Error scraping", error);
             reject(new Error("Error scraping data"));
@@ -236,4 +252,5 @@ export class LatestScraper extends ScraperController {
         });
     });
   }
+  
 }
