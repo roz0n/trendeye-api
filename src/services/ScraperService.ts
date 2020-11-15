@@ -243,7 +243,7 @@ export class LatestScraper extends ScraperService {
               }
             }
 
-            resolve({ data: responseData });
+            resolve(responseData);
           } else {
             console.log("Error scraping", error);
             reject(new Error("Error scraping data"));
