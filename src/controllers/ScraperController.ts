@@ -1,3 +1,4 @@
+import { Scraper } from './../types/scraperController.types';
 import cheerio from "cheerio";
 import _ from "lodash";
 import request from "request";
@@ -19,6 +20,7 @@ class ScraperResponse {
 
 class ScraperController {
   resources: ResourceTypes = {
+    latest: "",
     studios: "studios",
     trends: "trends/frame",
     countries: "country",
@@ -26,7 +28,7 @@ class ScraperController {
 
   url = (resource: string, endpoint?: string): string | null => {
     if (!resource) {
-      return null;
+      return "https://www.trendlist.org/";
     } else {
       return endpoint
         ? `https://www.trendlist.org/${resource}/${endpoint}`
@@ -187,6 +189,8 @@ export class TrendScraper extends ScraperController {
         (error: Error, response: request.Response, html: string) => {
           if (!error && response.statusCode == 200) {
             const $ = cheerio.load(html);
+            console.log("Response:", html);
+            resolve({ dummy: "Dummy data" });
           }
         }
       );
@@ -207,6 +211,29 @@ export class TrendScraper extends ScraperController {
           }
         }
       );
+    });
+  }
+}
+
+export class LatestScraper extends ScraperController {
+  getLatestPosts() {
+    console.log("Fetching...", this.url(this.resources.latest));
+
+    return new Promise((resolve, reject) => {
+      request(
+        this.url(this.resources.latest)!,
+        (error: Error, response: request.Response, html: string) => {
+
+          if (!error && response.statusCode == 200) {
+            const $ = cheerio.load(html);
+            console.log("Got Response:", html);
+            resolve({ dummy: "Dummy data" });
+          } else {
+            console.log("Error scraping", error);
+            reject(new Error("Error scraping data"));
+          }
+
+        });
     });
   }
 }

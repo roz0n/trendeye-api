@@ -6,6 +6,7 @@ export interface Scraper {
 }
 
 export interface ResourceTypes {
+  latest: string;
   studios: string;
   trends: string;
   countries: string;
