@@ -14,6 +14,4 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-// router.get("/:name");
-
 export { router };
