@@ -1,8 +1,8 @@
 import { Request, Response, Router } from "express";
-import StudioScraper from "../services/StudioListScraper";
+import StudiosController from "../controllers/studios.controller";
 
 const router = Router();
-const scraper = new StudioScraper();
+const scraper = new StudiosController();
 
 router.get("/", async (req: Request, res: Response) => {
   try {

@@ -1,9 +1,9 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
-import {router as studiosRouter} from "./routes/studios";
-import {router as trendsRouter} from "./routes/trends";
-import {router as latestRouter} from "./routes/latest";
+import {router as studiosRouter} from "./routes/studios.routes";
+import {router as trendsRouter} from "./routes/trends.routes";
+import {router as latestRouter} from "./routes/latestPosts.routes";
 
 const app = express();
 const PORT = 3001;

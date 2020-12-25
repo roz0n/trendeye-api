@@ -1,4 +1,4 @@
-import Studio from "../models/Studio";
+import Studio from "./studio.model";
 
 type CountryStudiosListing = {
   count: number | null | undefined;

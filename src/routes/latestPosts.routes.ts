@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { Router } from "express";
-import LatestPostsScraper from "../services/LatestPostsScraper";
+import LatestPostsController from "../controllers/latestPosts.controller";
 
 const router = Router();
-const scraper = new LatestPostsScraper();
+const scraper = new LatestPostsController();
 
 router.get("/", async (req: Request, res: Response) => {
   try {

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Router } from "express";
-import { TrendScraper } from "../services/ScraperService";
+import { TrendScraper } from "../services/scraper/scraper.service";
 
 const router = Router();
 const scraper = new TrendScraper();

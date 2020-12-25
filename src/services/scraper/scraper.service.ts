@@ -1,11 +1,11 @@
 import _ from "lodash";
 import request from "request";
 import got from "got";
-import Country from "../models/Country";
-import Work, { WorkImageLinks } from "../models/Work";
-import Studio from "../models/Studio";
-import { CountryCode, countryCodes } from "../data/countryCodes";
-import { ResourceTypes, ResponseData } from "../types/scrapeService.types";
+import Country from "../../models/country.model";
+import Work, { WorkImageLinks } from "../../models/work.model";
+import Studio from "../../models/studio.model";
+import { CountryCode, countryCodes } from "../../utils/countryCodes.utils";
+import { ResourceTypes, ResponseData } from "./scraper.types";
 import jsdom from "jsdom";
 
 class ScraperResponse {

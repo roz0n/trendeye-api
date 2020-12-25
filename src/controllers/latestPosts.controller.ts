@@ -1,8 +1,8 @@
 import got from "got";
-import ScraperService from "./ScraperService";
-import { LatestPostsAPIResponse } from "../types/scrapeService.types";
+import ScraperService from "../services/scraper/scraper.service";
+import { LatestPostsAPIResponse } from "../services/scraper/scraper.types";
 
-export default class LatestPostsScraper extends ScraperService {
+export default class LatestPostsController extends ScraperService {
   async getLatestPosts() {
     try {
       const request = await got(this.url(this.resources.latest)!);

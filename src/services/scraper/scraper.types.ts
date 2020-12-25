@@ -1,4 +1,4 @@
-import Country from "../models/Country";
+import Country from "../../models/country.model";
 
 export interface Scraper {
   resources: ResourceTypes;

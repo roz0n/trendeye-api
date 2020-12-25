@@ -1,10 +1,10 @@
 import got from "got";
-import ScraperService from "./ScraperService";
-import Country from "../models/Country";
-import { countryCodes as codes } from "./../data/countryCodes";
-import Studio from "../models/Studio";
+import ScraperService from "../services/scraper/scraper.service";
+import Country from "../models/country.model";
+import { countryCodes as codes } from "../utils/countryCodes.utils";
+import Studio from "../models/studio.model";
 
-export default class StudioScraper extends ScraperService {
+export default class StudiosController extends ScraperService {
 //   getStudioByName(name: string) {
 //     return new Promise((resolve, reject) => {
 //       request(
@@ -116,7 +116,7 @@ export default class StudioScraper extends ScraperService {
         }
       }
 
-      return responseData
+      return responseData;
     } catch (error) {
       throw new Error(error.message || error.response.body);
     }
