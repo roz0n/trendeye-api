@@ -13,8 +13,8 @@ export interface ResourceTypes {
 }
 
 export interface ResponseData {
-  info: StudioInfo,
-  works: any[]
+  info: StudioInfo;
+  works: any[];
 }
 
 export type StudioInfo = {
@@ -22,4 +22,13 @@ export type StudioInfo = {
   desc?: string | null;
   url?: string;
   country: Country;
-}
+};
+
+export type LatestPostsAPIResponse = {
+  id: number;
+  url?: string | null | undefined;
+  title?: string | null | undefined;
+  date?: string | null | undefined;
+  studio?: string | null | undefined;
+  error?: string | null | undefined;
+};
