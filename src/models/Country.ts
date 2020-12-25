@@ -1,18 +1,18 @@
 import Studio from "../models/Studio";
 
 type CountryStudiosListing = {
-  count: number | null;
+  count: number | null | undefined;
   list: Studio[];
 };
 
 class Country {
-  name: string;
-  iso_code: string;
+  name: string | null | undefined;
+  iso_code: string | null | undefined;
   studios: CountryStudiosListing;
 
   constructor(
-    name: string,
-    iso_code: string,
+    name: string | null | undefined,
+    iso_code: string | null | undefined,
     studios: CountryStudiosListing = { count: null, list: [] }
   ) {
     this.name = name;

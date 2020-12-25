@@ -1,11 +1,8 @@
 import got from "got";
-import jsdom from "jsdom";
 import ScraperService from "./ScraperService";
 import { LatestPostsAPIResponse } from "../types/scrapeService.types";
 
-export class LatestPostsScraper extends ScraperService {
-  JSDOM = jsdom.JSDOM;
-
+export default class LatestPostsScraper extends ScraperService {
   async getLatestPosts() {
     try {
       const request = await got(this.url(this.resources.latest)!);
@@ -52,7 +49,7 @@ export class LatestPostsScraper extends ScraperService {
 
       return responseData;
     } catch (error) {
-      throw new Error(error.message || error.response.body)
+      throw new Error(error.message || error.response.body);
     }
   }
 }

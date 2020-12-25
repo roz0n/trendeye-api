@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Router } from "express";
-import { LatestPostsScraper } from "../services/LatestPostsScraper";
+import LatestPostsScraper from "../services/LatestPostsScraper";
 
 const router = Router();
 const scraper = new LatestPostsScraper();

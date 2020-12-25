@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { StudioScraper } from "../services/ScraperService";
+import StudioScraper from "../services/StudioListScraper";
 
 const router = Router();
 const scraper = new StudioScraper();
@@ -13,18 +13,18 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/:name", async (req: Request, res: Response) => {
-  try {
-    const { name } = req.params;
-    if (!name) throw new Error("No studio name provided");
+// router.get("/:name", async (req: Request, res: Response) => {
+//   try {
+//     const { name } = req.params;
+//     if (!name) throw new Error("No studio name provided");
 
-    const response = await scraper.getStudioByName(name);
-    res.send({ success: true, data: response });
-  } catch (error) {
-    console.log("ERROR", error);
-    res.status(500).send({ error: true, message: error.message });
-  }
-});
+//     const response = await scraper.getStudioByName(name);
+//     res.send({ success: true, data: response });
+//   } catch (error) {
+//     console.log("ERROR", error);
+//     res.status(500).send({ error: true, message: error.message });
+//   }
+// });
 
 // router.get("/:country");
 
