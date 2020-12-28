@@ -8,64 +8,6 @@ import { Project } from "../models/project.model";
 import { countryCodes as codes } from "../utils/countryCodes.utils";
 
 export default class StudiosController extends ScraperService {
-  //   getStudioByName(name: string) {
-  //     return new Promise((resolve, reject) => {
-  //       request(
-  //         this.url(this.resources.studios, name)!,
-  //         (error: Error, response: request.Response, html: string) => {
-  //           if (!error && response.statusCode == 200) {
-  //             const $ = cheerio.load(html);
-  //             const studioInfo = $("#trendsright > .trendsinfo");
-  //             const studioWorks = $("#trendsleft > .trends");
-
-  //             // Get studio info
-  //             const studioName = studioInfo.find("h1").text();
-  //             const studioDesc = null;
-  //             const studioUrl = studioInfo.find("a").first().text();
-  //             const studioCountryName = studioInfo.find("a").last().text();
-  //             const studioCountryCode = countryCodes.find(
-  //               (country: CountryCode) =>
-  //                 studioCountryName.toLowerCase() === country.name.toLowerCase()
-  //             );
-  //             const studioCountryData = new Country(
-  //               studioCountryName,
-  //               (studioCountryCode && studioCountryCode.iso)!
-  //             );
-  //             const responseData = new ScraperResponse({
-  //               info: {
-  //                 name: studioName,
-  //                 desc: studioDesc,
-  //                 url: studioUrl,
-  //                 country: studioCountryData,
-  //               },
-  //               works: [],
-  //             });
-
-  //             // Get studio works
-  //             const allStudioWorks = studioWorks.find("li");
-  //             allStudioWorks.map((i, el) => {
-  //               const workUrl = $(el).find("a").attr("href") || "";
-  //               const workTitle =
-  //                 $(el).find("a").find("img").attr("alt")?.trim() || "";
-  //               const workImageLink =
-  //                 $(el).find("a").find("img").attr("src") || "";
-  //               const workImages: ProjectImageLinks = {
-  //                 small: workImageLink,
-  //                 large: workImageLink.replace("smallall", "big"),
-  //               };
-  //               const formedWorkData = new Work(workTitle, workUrl, workImages);
-  //               responseData.works.push(_.omitBy(formedWorkData, _.isNil));
-  //             });
-
-  //             resolve([responseData]);
-  //           } else {
-  //             reject(new Error("Error fetching studio"));
-  //           }
-  //         }
-  //       );
-  //     });
-  //   }
-
   async getStudioByName(desiredStudio: string) {
     try {
       const request = await got(this.url(this.resources.studios, desiredStudio)!);
