@@ -1,10 +1,11 @@
 import got from "got";
 import ScraperService from "../services/scraper/scraper.service";
 import Country from "../models/country.model";
-import { countryCodes as codes } from "../utils/countryCodes.utils";
 import Studio from "../models/studio.model";
+import { countryCodes as codes } from "../utils/countryCodes.utils";
 
 export default class StudiosController extends ScraperService {
+
 //   getStudioByName(name: string) {
 //     return new Promise((resolve, reject) => {
 //       request(
@@ -63,6 +64,36 @@ export default class StudiosController extends ScraperService {
 //     });
 //   }
 
+  async getStudioCountries() {
+    try {
+      const request = await got(this.url(this.resources.studios)!);
+      const dom = new this.JSDOM(request.body);
+
+      const { document } = dom.window;
+      const countriesList = document.querySelectorAll("#trendsleft > .columns > h2");
+      const responseData: Country[] = [];
+
+      for (let i = 0; i < countriesList.length; i++) {
+        const country = countriesList[i];
+        const countryName = country.textContent?.toLowerCase();
+        const countryCode = codes.find((country) => countryName === country.name.toLowerCase());
+        const countryData = new Country(countryName, (countryCode && countryCode.iso));
+        const countryStudiosList = country.nextElementSibling?.querySelectorAll("li");
+        
+        // Get the studios count and delete studios list prop as this route doesn't really need it
+        countryData.studios!.count = countryStudiosList?.length || null;
+        delete countryData.studios?.list;
+
+        responseData.push(countryData)
+      }
+
+      return responseData;
+    } catch (error) {
+      throw new Error(error.message || error.response.body);
+    }
+  }
+
+  // TODO: This method route needs a country paramater so all it does is get studios for a single country
   async getAllStudios() {
     try {
       const request = await got(this.url(this.resources.studios)!);
@@ -110,8 +141,8 @@ export default class StudiosController extends ScraperService {
                 studiosList.push(completeStudioData);
             }
             // Add country to response data
-            countryData.studios.count = studiosList.length;
-            countryData.studios.list = studiosList;
+            countryData.studios!.count = studiosList.length;
+            countryData.studios!.list = studiosList;
             responseData.push(countryData);
         }
       }

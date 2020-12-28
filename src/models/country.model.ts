@@ -2,13 +2,13 @@ import Studio from "./studio.model";
 
 type CountryStudiosListing = {
   count: number | null | undefined;
-  list: Studio[];
+  list?: Studio[];
 };
 
 class Country {
   name: string | null | undefined;
   iso_code: string | null | undefined;
-  studios: CountryStudiosListing;
+  studios?: CountryStudiosListing;
 
   constructor(
     name: string | null | undefined,

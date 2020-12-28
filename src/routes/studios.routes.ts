@@ -13,6 +13,15 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
+router.get("/countries", async (req: Request, res: Response) => {
+  try {
+    const response = await scraper.getStudioCountries();
+    res.send({ success: true, data: response });
+  } catch (error) {
+    res.status(500).send({ error: true, message: error.message });
+  }
+})
+
 // router.get("/:name", async (req: Request, res: Response) => {
 //   try {
 //     const { name } = req.params;
