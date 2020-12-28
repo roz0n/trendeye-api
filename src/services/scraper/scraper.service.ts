@@ -27,6 +27,7 @@ export default class ScraperService {
     countries: "country",
   };
 
+  // TODO: This is too complicated bro
   url = (resource: string, endpoint?: string): string | null => {
     if (!resource) {
       return "https://www.trendlist.org/";

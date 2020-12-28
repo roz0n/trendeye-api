@@ -10,7 +10,7 @@ router.get("/", async (req: Request, res: Response) => {
     const data = await scraper.getLatestPosts();
     res.send({ success: true, data: data });
   } catch (error) {
-    res.status(500).send({ error: true, message: error.message });
+    res.status(500).send({ success: false, message: error.message });
   }
 });
 

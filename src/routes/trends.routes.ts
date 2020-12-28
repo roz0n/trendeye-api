@@ -10,7 +10,7 @@ router.get("/", async (req: Request, res: Response) => {
     const response = await scraper.getAllTrends();
     res.send({ success: true, data: response });
   } catch (error) {
-    res.status(400).send({ error: true, message: error.message });
+    res.status(400).send({ success: false, message: error.message });
   }
 });
 

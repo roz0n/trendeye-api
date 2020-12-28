@@ -9,7 +9,7 @@ router.get("/", async (req: Request, res: Response) => {
     const response = await scraper.getAllStudios();
     res.send({ success: true, data: response });
   } catch (error) {
-    res.status(500).send({ error: true, message: error.message });
+    res.status(500).send({ success: false, message: error.message });
   }
 });
 
@@ -18,9 +18,20 @@ router.get("/countries", async (req: Request, res: Response) => {
     const response = await scraper.getStudioCountries();
     res.send({ success: true, data: response });
   } catch (error) {
-    res.status(500).send({ error: true, message: error.message });
+    res.status(500).send({ success: false, message: error.message });
   }
-})
+});
+
+router.get("/:country", async (req: Request, res: Response) => {
+  try {
+    const { country } = req.params;
+    const response = await scraper.getStudiosByCountry(country);
+
+    res.send({ success: true, data: response })
+  } catch (error) {
+    res.status(500).send({ success: false, message: error.message });
+  }
+});
 
 // router.get("/:name", async (req: Request, res: Response) => {
 //   try {
@@ -31,7 +42,7 @@ router.get("/countries", async (req: Request, res: Response) => {
 //     res.send({ success: true, data: response });
 //   } catch (error) {
 //     console.log("ERROR", error);
-//     res.status(500).send({ error: true, message: error.message });
+//     res.status(500).send({ success: false, message: error.message });
 //   }
 // });
 
