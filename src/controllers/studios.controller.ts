@@ -181,8 +181,6 @@ export default class StudiosController extends ScraperService {
 
   // TODO: A lot of this is repetiive code from get all studios... can we dry this out a bit?
   async getStudiosByCountry(desiredCountry: string) {
-    console.log("Fetching...", desiredCountry);
-
     try {
       const request = await got(this.url(this.resources.studios)!);
       const dom = new this.JSDOM(request.body);
