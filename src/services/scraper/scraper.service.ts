@@ -1,22 +1,8 @@
 import _ from "lodash";
 import request from "request";
-import got from "got";
-import Country from "../../models/country.model";
-import Work, { WorkImageLinks } from "../../models/work.model";
-import Studio from "../../models/studio.model";
-import { CountryCode, countryCodes } from "../../utils/countryCodes.utils";
 import { ResourceTypes, ResponseData } from "./scraper.types";
 import jsdom from "jsdom";
 
-class ScraperResponse {
-  info: ResponseData;
-  works: any[];
-
-  constructor(info: ResponseData, works: any[] = []) {
-    this.info = info;
-    this.works = works;
-  }
-}
 export default class ScraperService {
   JSDOM = jsdom.JSDOM;
 
@@ -27,7 +13,6 @@ export default class ScraperService {
     countries: "country",
   };
 
-  // TODO: This is too complicated bro
   url = (resource: string, endpoint?: string): string | null => {
     if (!resource) {
       return "https://www.trendlist.org/";

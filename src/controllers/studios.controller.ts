@@ -1,8 +1,10 @@
+import { ProjectImageLinks } from './../models/project.model';
 import { ResponseData } from "./../services/scraper/scraper.types";
 import got from "got";
 import ScraperService from "../services/scraper/scraper.service";
 import Country from "../models/country.model";
 import Studio from "../models/studio.model";
+import { Project } from "../models/project.model";
 import { countryCodes as codes } from "../utils/countryCodes.utils";
 
 export default class StudiosController extends ScraperService {
@@ -47,7 +49,7 @@ export default class StudiosController extends ScraperService {
   //                 $(el).find("a").find("img").attr("alt")?.trim() || "";
   //               const workImageLink =
   //                 $(el).find("a").find("img").attr("src") || "";
-  //               const workImages: WorkImageLinks = {
+  //               const workImages: ProjectImageLinks = {
   //                 small: workImageLink,
   //                 large: workImageLink.replace("smallall", "big"),
   //               };
@@ -64,15 +66,59 @@ export default class StudiosController extends ScraperService {
   //     });
   //   }
 
+  async getStudioByName(desiredStudio: string) {
+    try {
+      const request = await got(this.url(this.resources.studios, desiredStudio)!);
+      const dom = new this.JSDOM(request.body);
+      const { document } = dom.window;
+      
+      // TODO: Make a type for this
+      let responseData = null;
+
+      const studioInfo = document.querySelector("#trendsright .trendsinfo");
+      const studioProjects = document.querySelector("#trendsleft .trends")?.querySelectorAll("li");
+
+      // Get studio info
+      const studioName = studioInfo?.querySelector("h1")?.textContent;
+      const studioDesc = "Description";
+      const studioUrl = studioInfo?.querySelector("a")?.getAttribute("href");
+      
+      // Get studio projects
+      responseData = new Studio(0, studioName, studioProjects?.length || 0, studioUrl || "", []);
+
+      // Get studio projects
+      if (studioProjects && studioProjects.length > 0) {
+        for (let i = 0; i < studioProjects.length; i++) {
+          const projectEl = studioProjects[i];
+
+          const projectUrl = projectEl.querySelector("a")?.getAttribute("href") || "";
+          const projectTitle = projectEl.querySelector("a")?.querySelector("img")?.getAttribute("alt")?.trim();
+          const projectImageLink = projectEl.querySelector("a")?.querySelector("img")?.getAttribute("src");
+
+          const projectImages: ProjectImageLinks = {
+            small: projectImageLink || "",
+            large: projectImageLink?.replace("smallall", "big")
+          };
+
+          const projectData = new Project(projectTitle, projectUrl, projectImages);
+          responseData.projects?.push(projectData);
+        }
+      }
+
+      return responseData;
+
+    } catch (error) {
+      throw new Error(error.message || error.response.body);
+    }
+  }
+
   async getStudioCountries() {
     try {
       const request = await got(this.url(this.resources.studios)!);
       const dom = new this.JSDOM(request.body);
-
       const { document } = dom.window;
-      const countriesList = document.querySelectorAll(
-        "#trendsleft > .columns > h2"
-      );
+
+      const countriesList = document.querySelectorAll("#trendsleft > .columns > h2");
       const responseData: Country[] = [];
 
       for (let i = 0; i < countriesList.length; i++) {

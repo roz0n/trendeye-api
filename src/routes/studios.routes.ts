@@ -27,25 +27,21 @@ router.get("/:country", async (req: Request, res: Response) => {
     const { country } = req.params;
     const response = await scraper.getStudiosByCountry(country);
 
-    res.send({ success: true, data: response })
+    res.send({ success: true, data: response });
   } catch (error) {
     res.status(500).send({ success: false, message: error.message });
   }
 });
 
-// router.get("/:name", async (req: Request, res: Response) => {
-//   try {
-//     const { name } = req.params;
-//     if (!name) throw new Error("No studio name provided");
+router.get("/single/:name", async (req: Request, res: Response) => {
+  try {
+    const { name } = req.params;
+    const response = await scraper.getStudioByName("node");
 
-//     const response = await scraper.getStudioByName(name);
-//     res.send({ success: true, data: response });
-//   } catch (error) {
-//     console.log("ERROR", error);
-//     res.status(500).send({ success: false, message: error.message });
-//   }
-// });
-
-// router.get("/:country");
+    res.send({ success: true, data: response });
+  } catch (error) {
+    res.status(500).send({ success: false, message: error.message });
+  }
+});
 
 export { router };
