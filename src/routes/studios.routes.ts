@@ -36,7 +36,7 @@ router.get("/:country", async (req: Request, res: Response) => {
 router.get("/single/:name", async (req: Request, res: Response) => {
   try {
     const { name } = req.params;
-    const response = await scraper.getStudioByName("node");
+    const response = await scraper.getStudioByName(name);
 
     res.send({ success: true, data: response });
   } catch (error) {
