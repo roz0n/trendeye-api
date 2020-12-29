@@ -7,7 +7,6 @@ function cacheRoute(req: Request, res: Response, next: NextFunction) {
   cache.get(originalUrl, (error, data) => {
     if (error) {
       console.log(`[REDIS] Error fetching cached response for route: ${originalUrl}`);
-      console.log(error);
       res.status(500).send("Catastrophic error");
     }
 
