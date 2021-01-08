@@ -6,7 +6,10 @@
     "start": "node ./dist/app.js",
     "dev": "tsc && concurrently -k -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold\" \"npm run watch:ts\" \"nodemon ./dist/app.js\"",
     "prod": "tsc && yarn start",
-    "watch:ts": "tsc -w"
+    "watch:ts": "tsc -w",
+    "create:folders": "cd data && xargs -tI % mkdir % < categories.txt",
+    "scrape:categories": "node ./dist/scripts/scrapeCategories.scripts.js",
+    "scrape:trendlist":  "rm -rf ./data && mkdir ./data && npm run scrape:categories && npm run create:folders && node ./dist/scripts/scrapeTrendlist.scripts.js"
   },
   "dependencies": {
     "@types/cheerio": "^0.22.18",
