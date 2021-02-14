@@ -2,7 +2,7 @@ import cache from "../cache";
 import { Request, Response, NextFunction } from "express";
 
 function cacheRoute(req: Request, res: Response, next: NextFunction) {
-	const { originalUrl } = req;
+  const { originalUrl } = req;
 
   cache.get(originalUrl, (error, data) => {
     if (error) {
