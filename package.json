@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./dist/app.js",
     "build": "tsc",
+    "start": "node ./dist/app.js",
     "dev": "tsc && concurrently -k -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold\" \"npm run watch:ts\" \"nodemon ./dist/app.js\"",
     "prod": "tsc && yarn start",
     "watch:ts": "tsc -w",
