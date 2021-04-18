@@ -2,7 +2,7 @@ import got from "got";
 import ScraperService from "../services/scraper/scraper.service";
 import { Project, ProjectImageLinks } from "../models/project.model";
 
-export default class CategoriesConrtoller extends ScraperService {
+export default class CategoriesController extends ScraperService {
   async getAllCategories() {}
 
   async getCategoryByName(name: string, limit?: number | undefined) {
@@ -22,7 +22,7 @@ export default class CategoriesConrtoller extends ScraperService {
               "small": projectUrl!,
               "large": projectUrl?.replace("small", "big")
           };
-          const projectData = new Project(projectTitle!, projectUrl!, projectImages!);
+          const projectData = new Project(projectTitle, projectUrl, projectImages!);
           responseData.push(projectData);
       }
 

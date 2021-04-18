@@ -5,10 +5,10 @@ export type ProjectImageLinks = {
 
 export class Project {
   title?: string;
-  url?: string;
+  url?: string  | null | undefined;
   images?: ProjectImageLinks;
 
-  constructor(title?: string, url?: string, images?: ProjectImageLinks) {
+  constructor(title?: string, url?: string | null | undefined, images?: ProjectImageLinks) {
     this.title = title;
     this.url = url;
     this.images = images;
