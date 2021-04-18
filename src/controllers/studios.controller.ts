@@ -41,9 +41,8 @@ export default class StudiosController extends ScraperService {
             small: projectImageLink || "",
             large: projectImageLink?.replace("small", "big")
           };
-
-          const projectData = new Project(projectTitle, projectUrl, projectImages);
-          responseData.projects?.push(projectData);
+          
+          responseData.projects?.push(new Project(projectTitle, projectUrl, projectImages));
         }
       }
 
@@ -80,7 +79,6 @@ export default class StudiosController extends ScraperService {
         // Get the studios count and delete studios list prop as this route doesn't really need it
         countryData.studios!.count = countryStudiosList?.length || null;
         delete countryData.studios?.list;
-
         responseData.push(countryData);
       }
 

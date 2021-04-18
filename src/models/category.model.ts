@@ -8,4 +8,14 @@ class Category {
   }
 }
 
+export class CategoryDescription {
+  name: string | undefined;
+  description: string | undefined;
+
+  constructor(name: string | undefined, description: string | undefined) {
+    this.name = name;
+    this.description = description;
+  }
+}
+
 export default Category;

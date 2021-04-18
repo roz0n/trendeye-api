@@ -18,7 +18,19 @@ router.get("/list", async (req: Request, res: Response) => {
   } catch (error) {
     res.status(400).send({ success: false, message: error.message });
   }
-})
+});
+
+router.get("/desc/:name", async (req: Request, res: Response) => {
+  try {
+    const { name } = req.params;
+    const response = await scraper.getCategoryDescription(name);
+
+    // cache.setex(req.originalUrl, TTL, JSON.stringify(response));
+    res.send({ success: true, data: response });
+  } catch (error) {
+    res.status(400).send({ success: false, message: error.message });
+  }
+});
 
 router.get("/:name", async (req: Request, res: Response) => {
   try {

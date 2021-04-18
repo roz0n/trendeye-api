@@ -5,7 +5,7 @@ export interface Scraper {
   url: (resource: string, endpoint: string) => string | null;
 }
 export interface ResourceTypes {
-  latest: string;
+  home: string;
   studios: string;
   trends: string;
   countries: string;

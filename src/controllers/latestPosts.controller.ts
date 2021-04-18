@@ -5,7 +5,7 @@ import { LatestPostsAPIResponse } from "../services/scraper/scraper.types";
 export default class LatestPostsController extends ScraperService {
   async getLatestPosts() {
     try {
-      const request = await got(this.url(this.resources.latest)!);
+      const request = await got(this.url(this.resources.home)!);
       const dom = new this.JSDOM(request.body);
 
       const { document } = dom.window;

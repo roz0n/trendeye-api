@@ -2,16 +2,14 @@ import got from "got";
 import ScraperService from "../services/scraper/scraper.service";
 import Category from "../models/category.model";
 import { Project, ProjectImageLinks } from "../models/project.model";
+import { CategoryDescription } from './../models/category.model';
+import { parensRegex, numsRegex, newLineRegex } from './../utils/regex.utils';
+import categoryIdentifiers from '../data/categoryIdentifiers';
 
 export default class CategoriesController extends ScraperService {
   async getCategoriesList() {
-    // Match all chars between parens including parens
-    const parensRegex = /\(([^)]+)\)/g;
-    // Match all numertical chars
-    const countRegex = /[0-9]+/g;
-
     try {
-      const request = await got(this.url(null));
+      const request = await got(this.url(this.resources.home));
       const dom = new this.JSDOM(request.body);
       const { document } = dom.window;
 
@@ -25,10 +23,8 @@ export default class CategoriesController extends ScraperService {
         const categoryName = categoryEl.textContent
           ?.replace(parensRegex, "")
           .trim();
-        let categoryCount = categoryEl.textContent?.match(countRegex);
-        const categoryData = new Category(categoryName, +categoryCount![0]);
-
-        responseData.push(categoryData);
+        let categoryCount = categoryEl.textContent?.match(numsRegex);
+        responseData.push(new Category(categoryName, +categoryCount![0]));
       }
 
       return responseData;
@@ -37,7 +33,35 @@ export default class CategoriesController extends ScraperService {
     }
   }
 
-  async getCategoryDescription() {}
+  async getCategoryDescription(name: string) {
+      try {
+          const request = await got(this.url(this.resources.trends, name));
+          const dom = new this.JSDOM(request.body);
+          const { document } = dom.window;
+
+          const categoryName = categoryIdentifiers[name];
+          const categoryDescriptionRaw = document.querySelector(".trendsinfo")?.textContent;
+          
+          /**
+           * The description is a text node and not enclosed in an element which is not ideal.
+           * To circumvent this, scrape all the text in the parent element's textContent and parse out
+           * the description via regex and replace methods.
+           */
+
+          // Remove new line chars
+          let categoryDescriptionFormatted = categoryDescriptionRaw?.replace(newLineRegex, "");
+          // Remove trend name
+          categoryDescriptionFormatted = categoryDescriptionFormatted?.replace(categoryName, "");
+          // Remove year nums
+          categoryDescriptionFormatted = categoryDescriptionFormatted?.replace(numsRegex, "");
+          // Remove weird "N/A" text
+          categoryDescriptionFormatted = categoryDescriptionFormatted?.replace("N/A", "").trim();
+          
+          return new CategoryDescription(categoryName, categoryDescriptionFormatted);
+      } catch (error) {
+          throw new Error(error.message || error.response.body);
+      }
+  }
 
   async getCategoryByName(name: string, limit?: number | undefined) {
     try {

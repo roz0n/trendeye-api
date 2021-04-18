@@ -7,7 +7,7 @@ export default class ScraperService {
   JSDOM = jsdom.JSDOM;
 
   resources: ResourceTypes = {
-    latest: "",
+    home: "",
     studios: "studios",
     trends: "trends",
     countries: "country",
