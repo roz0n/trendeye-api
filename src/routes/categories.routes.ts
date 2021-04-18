@@ -12,6 +12,8 @@ router.use(cacheRoute);
 router.get("/list", async (req: Request, res: Response) => {
   try {
     const response = await scraper.getCategoriesList();
+
+    cache.setex(req.originalUrl, TTL, JSON.stringify(response));
     res.send({ success: true, data: response });
   } catch (error) {
     res.status(400).send({ success: false, message: error.message });
