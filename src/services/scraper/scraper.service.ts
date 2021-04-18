@@ -13,7 +13,7 @@ export default class ScraperService {
     countries: "country",
   };
 
-  url = (resource: string, endpoint?: string): string | null => {
+  url = (resource: string | null, endpoint?: string): string => {
     if (!resource) {
       return "https://www.trendlist.org/";
     } else {

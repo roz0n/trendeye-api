@@ -11,7 +11,7 @@ export default class CategoriesController extends ScraperService {
     const countRegex = /[0-9]+/g;
 
     try {
-      const request = await got(this.url()!);
+      const request = await got(this.url(null));
       const dom = new this.JSDOM(request.body);
       const { document } = dom.window;
 
