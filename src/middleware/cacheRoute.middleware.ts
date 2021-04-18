@@ -1,6 +1,8 @@
 import cache from "../cache";
 import { Request, Response, NextFunction } from "express";
 
+export const TTL = 7200;
+
 function cacheRoute(req: Request, res: Response, next: NextFunction) {
   const { originalUrl } = req;
 

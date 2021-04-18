@@ -90,7 +90,7 @@ export default class StudiosController extends ScraperService {
     }
   }
 
-  // TODO: This method route needs a country paramater so all it does is get studios for a single country
+  // TODO: This method route needs a country parameter so all it does is get studios for a single country
   async getAllStudios() {
     try {
       const request = await got(this.url(this.resources.studios)!);
