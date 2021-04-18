@@ -27,7 +27,7 @@ export default class CategoriesConrtoller extends ScraperService {
       }
 
       if (limit && typeof limit == "number") {
-          return responseData.slice(0,9);
+          return responseData.slice(0,limit);
       }
 
       return responseData;
