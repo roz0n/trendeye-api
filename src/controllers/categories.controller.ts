@@ -5,7 +5,7 @@ import { Project, ProjectImageLinks } from "../models/project.model";
 export default class CategoriesConrtoller extends ScraperService {
   async getAllCategories() {}
 
-  async getCategoryByName(name: string) {
+  async getCategoryByName(name: string, limit?: number | undefined) {
     try {
       const request = await got(this.url(this.resources.trends, name)!);
       const dom = new this.JSDOM(request.body);
@@ -24,6 +24,10 @@ export default class CategoriesConrtoller extends ScraperService {
           };
           const projectData = new Project(projectTitle!, projectUrl!, projectImages!);
           responseData.push(projectData);
+      }
+
+      if (limit && typeof limit == "number") {
+          return responseData.slice(0,9);
       }
 
       return responseData;

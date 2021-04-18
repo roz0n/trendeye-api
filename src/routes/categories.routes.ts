@@ -12,10 +12,11 @@ router.use(cacheRoute);
 router.get("/:name", async (req: Request, res: Response) => {
   try {
     const { name } = req.params;
-    const response = await scraper.getCategoryByName(name);
-    
+    const { limit } = req.query;
+    const response = await scraper.getCategoryByName(name, +limit!);
+
     cache.setex(req.originalUrl, 3600, JSON.stringify(response));
-    res.send({ success: true, data: response });
+    res.send({ success: true, limit, data: response });
   } catch (error) {
     res.status(400).send({ success: false, message: error.message });
   }
