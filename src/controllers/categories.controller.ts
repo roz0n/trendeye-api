@@ -4,7 +4,7 @@ import Category from "../models/category.model";
 import { Project, ProjectImageLinks } from "../models/project.model";
 import { CategoryDescription } from './../models/category.model';
 import { parensRegex, numsRegex, newLineRegex } from './../utils/regex.utils';
-import categoryIdentifiers from '../data/categoryIdentifiers';
+import categoryIdentifiers from '../dictionaries/categoryIdentifiers.dictionary';
 
 export default class CategoriesController extends ScraperService {
   async getCategoriesList() {
