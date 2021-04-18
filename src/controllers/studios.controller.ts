@@ -5,7 +5,7 @@ import ScraperService from "../services/scraper/scraper.service";
 import Country from "../models/country.model";
 import Studio from "../models/studio.model";
 import { Project } from "../models/project.model";
-import { countryCodes as codes } from "../utils/countryCodes.utils";
+import { countryCodes as codes } from "../dictionaries/countryCodes.dictionary";
 
 export default class StudiosController extends ScraperService {
   async getStudioByName(desiredStudio: string) {
@@ -41,7 +41,7 @@ export default class StudiosController extends ScraperService {
             small: projectImageLink || "",
             large: projectImageLink?.replace("small", "big")
           };
-          
+
           responseData.projects?.push(new Project(projectTitle, projectUrl, projectImages));
         }
       }
