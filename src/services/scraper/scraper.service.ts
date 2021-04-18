@@ -9,7 +9,7 @@ export default class ScraperService {
   resources: ResourceTypes = {
     latest: "",
     studios: "studios",
-    trends: "trends/frame",
+    trends: "trends",
     countries: "country",
   };
 
@@ -22,38 +22,4 @@ export default class ScraperService {
         : `https://www.trendlist.org/${resource}`;
     }
   };
-}
-
-export class TrendScraper extends ScraperService {
-  getTrendByName(name: string) {
-    return new Promise((reject, resolve) => {
-      request(
-        this.url(this.resources.trends, name)!,
-        (error: Error, response: request.Response, html: string) => {
-          if (!error && response.statusCode == 200) {
-            const $ = cheerio.load(html);
-            console.log("Response:", html);
-            resolve({ dummy: "Dummy data" });
-          }
-        }
-      );
-    });
-  }
-
-  getAllTrends() {
-    return new Promise((reject, resolve) => {
-      request(
-        this.url(this.resources.trends)!,
-        (error: Error, response: request.Response, html: string) => {
-          if (!error && response.statusCode == 200) {
-            const $ = cheerio.load(html);
-            console.log("Response:", html);
-            resolve({ dummy: "Dummy data" });
-          } else {
-            reject(new Error("Error scraping data"));
-          }
-        }
-      );
-    });
-  }
 }

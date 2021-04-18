@@ -39,7 +39,7 @@ export default class StudiosController extends ScraperService {
 
           const projectImages: ProjectImageLinks = {
             small: projectImageLink || "",
-            large: projectImageLink?.replace("small", "big")
+            large: projectImageLink?.replace("smallall", "big")
           };
 
           const projectData = new Project(projectTitle, projectUrl, projectImages);

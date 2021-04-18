@@ -4,7 +4,6 @@ export interface Scraper {
   resources: ResourceTypes;
   url: (resource: string, endpoint: string) => string | null;
 }
-
 export interface ResourceTypes {
   latest: string;
   studios: string;
