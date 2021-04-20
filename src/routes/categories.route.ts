@@ -25,7 +25,7 @@ router.get("/desc/:name", async (req: Request, res: Response) => {
     const { name } = req.params;
     const response = await scraper.getCategoryDescription(name);
 
-    // cache.setex(req.originalUrl, TTL, JSON.stringify(response));
+    cache.setex(req.originalUrl, TTL, JSON.stringify(response));
     res.send({ success: true, data: response });
   } catch (error) {
     res.status(400).send({ success: false, message: error.message });
