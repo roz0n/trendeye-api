@@ -31,12 +31,11 @@ router.post("/", async (req: Request, res: Response) => {
     if (
       !image ||
       !classifiedIdentifiers ||
-      !correctIdentifiers ||
       !date ||
       !deviceId ||
       !observationResult
     ) {
-      throw new Error("Invalid feedback");
+      throw new Error("Invalid feedback provided");
     }
 
     let report = new FeedbackReport(
