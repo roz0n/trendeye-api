@@ -5,6 +5,7 @@ import morgan from "morgan";
 import { router as studiosRouter } from "./routes/studios.route";
 import { router as categoriesRouter } from "./routes/categories.route";
 import { router as latestRouter } from "./routes/latestPosts.route";
+import { router as feedbackRouter } from "./routes/feedback.route";
 
 require("./db");
 
@@ -19,6 +20,7 @@ app.use(cookieParser());
 app.use("/latest", latestRouter);
 app.use("/categories", categoriesRouter);
 app.use("/studios", studiosRouter);
+app.use("/feedback", feedbackRouter);
 
 app.listen(PORT, () =>
   console.log(`🔵 Trendlist API listening at http://localhost:${PORT}`)

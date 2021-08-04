@@ -16,4 +16,4 @@ process.on("SIGINT", async () => {
   process.exit(0);
 });
 
-export { db };
+module.exports = db;
