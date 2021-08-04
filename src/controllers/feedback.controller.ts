@@ -1,18 +1,28 @@
+import { FeedbackReport } from "../models/feedback.model";
+
 const db = require("../db");
 
 export default class FeedbackController {
-  async savePositiveFeedback() {
+  static POSITIVE = "positive";
+  static NEGATIVE = "negative";
+
+  async savePositiveFeedback(report: FeedbackReport) {
     try {
       const feedback = db.get("feedback");
-      await feedback.insert({ data: { test: true } });
+      await feedback.insert({ data: report });
     } catch (error) {
       console.log("Error", error);
       throw new Error("Failed to save positive feedback");
     }
   }
 
-  async saveNegativeFeedback() {
+  async saveNegativeFeedback(report: FeedbackReport) {
     try {
-    } catch (error) {}
+      const feedback = db.get("feedback");
+      await feedback.insert({ data: report });
+    } catch (error) {
+      console.log("Error", error);
+      throw new Error("Failed to save positive feedback");
+    }
   }
 }
