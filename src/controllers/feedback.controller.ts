@@ -22,7 +22,7 @@ export default class FeedbackController {
       await feedback.insert({ data: report });
     } catch (error) {
       console.log("Error", error);
-      throw new Error("Failed to save positive feedback");
+      throw new Error("Failed to save negative feedback");
     }
   }
 }
