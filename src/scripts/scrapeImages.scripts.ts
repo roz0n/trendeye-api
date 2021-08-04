@@ -13,7 +13,12 @@ export async function scrapeImages(categoryNames: string[]) {
   console.log("Beginning image scraping...");
   sleep(2000);
 
-  let errors: Array<{ category: string; index: number; name: string; url: string }> = [];
+  let errors: Array<{
+    category: string;
+    index: number;
+    name: string;
+    url: string;
+  }> = [];
 
   for (let i = 0; i < categoryNames.length; i++) {
     let category = categoryNames[i];
@@ -22,21 +27,31 @@ export async function scrapeImages(categoryNames: string[]) {
 
     let images = await ImageRipper.getImageUrls(category);
     sleep(2000);
-    
+
     console.log("Complete!");
     console.log(`Images for: ${category}:`, images);
     console.log(`Last step, scraping images for ${category}...`);
 
     for (let i = 0; i < images!.length; i++) {
-      sleep(2000); // limit requests to one a second, otherwise it's too fast and some don't finish
+      const filePath = `./data/${
+        i % 2 === 0 ? "training" : "test"
+      }/${category}/${images![i]!.name}.png`;
+
+      sleep(3000); // limit requests so we don't overwhelm the server
+
       await pipeline(
         got.stream(images![i]!.url),
-        fs.createWriteStream(`./data/${category}/${images![i]!.name}.png`),
+        fs.createWriteStream(filePath),
         function (error) {
           if (error) {
             console.log("Error saving image:", error);
             console.log("Logging error...");
-            errors.push({ category: category, index: i, name: images![i]!.name, url: images![i]!.url });
+            errors.push({
+              category: category,
+              index: i,
+              name: images![i]!.name,
+              url: images![i]!.url,
+            });
             sleep(2000);
           }
           console.log(`Saved image ${i}/${images!.length}`);
@@ -44,11 +59,11 @@ export async function scrapeImages(categoryNames: string[]) {
       );
     }
 
-    sleep(2000);
+    sleep(3000);
   }
 
   console.log("Done scraping all images!");
-  console.log("Errors:", errors);
+  console.log("Errors:", JSON.stringify(errors));
 
   fs.writeFile("./data/errors.json", JSON.stringify(errors), function (error) {
     if (error) console.log("Error saving error log:", error);

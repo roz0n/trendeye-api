@@ -8,26 +8,20 @@
     "dev": "tsc && concurrently -k -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold\" \"npm run watch:ts\" \"nodemon ./dist/app.js\"",
     "prod": "tsc && yarn start",
     "watch:ts": "tsc -w",
-    "create:folders": "cd data && xargs -tI % mkdir % < categories.txt",
+    "create:folders": "cd data && cd training && xargs -tI % mkdir % < ../categories.txt && cd .. && cd test && xargs -tI % mkdir % < ../categories.txt",
     "scrape:categories": "node ./dist/scripts/scrapeCategories.scripts.js",
-    "scrape:trendlist": "rm -rf ./data && mkdir ./data && npm run scrape:categories && npm run create:folders && node ./dist/scripts/scrapeTrendlist.scripts.js"
+    "scrape:trendlist": "rm -rf ./data && mkdir ./data && mkdir ./data/training && mkdir ./data/test && npm run scrape:categories && npm run create:folders && node ./dist/scripts/scrapeTrendlist.scripts.js"
   },
   "dependencies": {
-    "@types/cheerio": "^0.22.18",
-    "@types/cookie-parser": "^1.4.2",
-    "@types/express": "^4.17.6",
-    "@types/lodash": "^4.14.155",
-    "@types/morgan": "^1.9.0",
-    "@types/node": "^14.0.13",
-    "@types/redis": "^2.8.28",
-    "@types/request": "^2.48.5",
     "axios": "^0.21.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "got": "^11.8.1",
     "jsdom": "^16.4.0",
     "lodash": "^4.17.20",
+    "monk": "^7.3.4",
     "morgan": "~1.9.1",
     "nodemon": "^2.0.4",
     "redis": "^3.0.2",
@@ -35,6 +29,16 @@
     "typescript": "^4.2.4"
   },
   "devDependencies": {
-    "@types/jsdom": "^16.2.5"
+    "@types/cheerio": "^0.22.18",
+    "@types/cookie-parser": "^1.4.2",
+    "@types/express": "^4.17.6",
+    "@types/got": "^9.6.12",
+    "@types/jsdom": "^16.2.5",
+    "@types/lodash": "^4.14.155",
+    "@types/monk": "^6.0.0",
+    "@types/morgan": "^1.9.0",
+    "@types/node": "^14.0.13",
+    "@types/redis": "^2.8.28",
+    "@types/request": "^2.48.5"
   }
 }
