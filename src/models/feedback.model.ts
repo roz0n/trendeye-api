@@ -1,8 +1,4 @@
-import FeedbackController from "../controllers/feedback.controller";
-
-type FeedbackReportTypes =
-  | typeof FeedbackController.POSITIVE
-  | typeof FeedbackController.NEGATIVE;
+type FeedbackReportTypes = "positive" | "negative";
 
 export class FeedbackReport {
   type: FeedbackReportTypes;
@@ -14,7 +10,7 @@ export class FeedbackReport {
   observationResult: string;
 
   constructor(
-    type: string,
+    type: FeedbackReportTypes,
     image: string,
     classifiedIdentifiers: string,
     correctIdentifiers: string | null,
