@@ -1,7 +1,5 @@
 import fs from "fs";
-// TODO: Remove got usage: https://stackoverflow.com/questions/60202993/how-to-direct-the-stream-of-an-audio-file-through-express-js-if-it-is-on-another
-import axios from "axios";
-// import got from "got";
+import got from "got";
 import ImageRipper from "../services/scraper/imageRipper.service";
 import { pipeline } from "stream";
 
@@ -44,45 +42,46 @@ export async function scrapeImages(categoryNames: string[]) {
 
       sleep(SLEEP_DURATION); // limit requests so we don't overwhelm the server and risk rate-limiting or something else, the site seems brittle
 
-      // await pipeline(
-      //   got.stream(images![i]!.url),
-      //   fs.createWriteStream(filePath),
-      //   function (error) {
-      //     if (error) {
-      //       console.log("Error saving image:", error);
-      //       console.log("Logging error...");
-      //       errors.push({
-      //         category: category,
-      //         index: i,
-      //         name: images![i]!.name,
-      //         url: images![i]!.url,
-      //       });
-      //       sleep(SLEEP_DURATION);
-      //     }
-      //     console.log(`Saved image ${i}/${images!.length}`);
-      //   }
-      // );
-
-      await axios({ method: "get", url, responseType: "stream" }).then(
-        (response) => {
-          if (response.status !== 200) {
-            console.log("Error saving image...");
+      await pipeline(
+        got.stream(images![i]!.url),
+        fs.createWriteStream(filePath),
+        function (error) {
+          if (error) {
+            console.log("Error saving image:", error);
             console.log("Logging error...");
-
             errors.push({
               category: category,
               index: i,
               name: images![i]!.name,
               url: images![i]!.url,
             });
-
             sleep(SLEEP_DURATION);
-          } else {
-            fs.createWriteStream(filePath);
           }
+          console.log(`Saved image ${i}/${images!.length}`);
         }
       );
-    }
+
+      // TODO: As soon as we can test this again, implement the above with axios
+    //   await axios({ method: "get", url, responseType: "stream" }).then(
+    //     (response) => {
+    //       if (response.status !== 200) {
+    //         console.log("Error saving image...");
+    //         console.log("Logging error...");
+
+    //         errors.push({
+    //           category: category,
+    //           index: i,
+    //           name: images![i]!.name,
+    //           url: images![i]!.url,
+    //         });
+
+    //         sleep(SLEEP_DURATION);
+    //       } else {
+    //         fs.createWriteStream(filePath);
+    //       }
+    //     }
+    //   );
+    // }
 
     sleep(3000);
   }
