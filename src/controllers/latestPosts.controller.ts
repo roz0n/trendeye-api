@@ -1,12 +1,12 @@
-import got from "got";
+import axios from "axios";
 import ScraperService from "../services/scraper/scraper.service";
 import { LatestPostsAPIResponse } from "../services/scraper/scraper.types";
 
 export default class LatestPostsController extends ScraperService {
   async getLatestPosts() {
     try {
-      const request = await got(this.url(this.resources.home)!);
-      const dom = new this.JSDOM(request.body);
+      const request = await axios.get(this.url(this.resources.home)!);
+      const dom = new this.JSDOM(request.data);
 
       const { document } = dom.window;
       const imageList = document.querySelector(".index");

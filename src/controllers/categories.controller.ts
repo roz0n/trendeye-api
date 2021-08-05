@@ -1,4 +1,3 @@
-// import got from "got";
 import axios from "axios";
 import ScraperService from "../services/scraper/scraper.service";
 import Category from "../models/category.model";
