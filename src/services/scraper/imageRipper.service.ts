@@ -1,4 +1,4 @@
-import got from "got";
+import axios from "axios";
 import jsdom from "jsdom";
 
 class ImageRipper {
@@ -9,8 +9,8 @@ class ImageRipper {
     try {
       // make req to home page
       // return array of links to category pages
-      const request = await got(this.endpoint);
-      const dom = new this.JSDOM(request.body);
+      const request = await axios.get(this.endpoint);
+      const dom = new this.JSDOM(request.data);
       const { document } = dom.window;
       const linkElList = document
         .querySelector("#rightmenu")
@@ -36,8 +36,10 @@ class ImageRipper {
       // get list of every image url on that page
       // replace small for big
       // download the image
-      const request = await got(`https://www.trendlist.org/trends/${category}`);
-      const dom = new this.JSDOM(request.body);
+      const request = await axios.get(
+        `https://www.trendlist.org/trends/${category}`
+      );
+      const dom = new this.JSDOM(request.data);
       const { document } = dom.window;
 
       const imageElList = document
@@ -49,7 +51,10 @@ class ImageRipper {
         const url = imageElList![i]
           .getAttribute("src")
           ?.replace("small", "big");
-        const name = imageElList![i].getAttribute("alt")?.trim().replace(/[^a-zA-Z0-9]/g,'_');
+        const name = imageElList![i]
+          .getAttribute("alt")
+          ?.trim()
+          .replace(/[^a-zA-Z0-9]/g, "_");
         imageUrls.push({ url: url!, name: name! });
       }
 
