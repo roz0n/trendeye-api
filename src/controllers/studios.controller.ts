@@ -1,6 +1,6 @@
 import { ProjectImageLinks } from "./../models/project.model";
 // import { ResponseData } from "./../services/scraper/scraper.types";
-import got from "got";
+import axios from "axios";
 import ScraperService from "../services/scraper/scraper.service";
 import Country from "../models/country.model";
 import Studio from "../models/studio.model";
@@ -10,10 +10,10 @@ import { countryCodes as codes } from "../utils/countryCodes.util";
 export default class StudiosController extends ScraperService {
   async getStudioByName(desiredStudio: string) {
     try {
-      const request = await got(
+      const request = await axios.get(
         this.url(this.resources.studios, desiredStudio)!
       );
-      const dom = new this.JSDOM(request.body);
+      const dom = new this.JSDOM(request.data);
       const { document } = dom.window;
 
       // TODO: Make a type for this
@@ -74,8 +74,8 @@ export default class StudiosController extends ScraperService {
 
   async getStudioCountries() {
     try {
-      const request = await got(this.url(this.resources.studios)!);
-      const dom = new this.JSDOM(request.body);
+      const request = await axios.get(this.url(this.resources.studios)!);
+      const dom = new this.JSDOM(request.data);
       const { document } = dom.window;
 
       const countriesList = document.querySelectorAll(
@@ -111,8 +111,8 @@ export default class StudiosController extends ScraperService {
   // TODO: This method route needs a country parameter so all it does is get studios for a single country
   async getAllStudios() {
     try {
-      const request = await got(this.url(this.resources.studios)!);
-      const dom = new this.JSDOM(request.body);
+      const request = await axios.get(this.url(this.resources.studios)!);
+      const dom = new this.JSDOM(request.data);
 
       const { document } = dom.window;
       const countriesList = document.querySelectorAll(
@@ -187,8 +187,8 @@ export default class StudiosController extends ScraperService {
   // TODO: A lot of this is repetiive code from get all studios... can we dry this out a bit?
   async getStudiosByCountry(desiredCountry: string) {
     try {
-      const request = await got(this.url(this.resources.studios)!);
-      const dom = new this.JSDOM(request.body);
+      const request = await axios.get(this.url(this.resources.studios)!);
+      const dom = new this.JSDOM(request.data);
 
       const { document } = dom.window;
       const countriesList = document.querySelectorAll(
