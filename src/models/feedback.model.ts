@@ -1,7 +1,5 @@
-type FeedbackReportTypes = "positive" | "negative";
-
 export class FeedbackReport {
-  type: FeedbackReportTypes;
+  type: string;
   image: string;
   classifiedIdentifiers: string;
   correctIdentifiers: string | null;
@@ -10,7 +8,7 @@ export class FeedbackReport {
   observationResult: string;
 
   constructor(
-    type: FeedbackReportTypes,
+    type: string,
     image: string,
     classifiedIdentifiers: string,
     correctIdentifiers: string | null,
