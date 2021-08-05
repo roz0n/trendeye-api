@@ -43,7 +43,7 @@ export async function scrapeImages(categoryNames: string[]) {
       sleep(SLEEP_DURATION); // limit requests so we don't overwhelm the server and risk rate-limiting or something else, the site seems brittle
 
       await pipeline(
-        got.stream(images![i]!.url),
+        got.stream(url),
         fs.createWriteStream(filePath),
         function (error) {
           if (error) {
@@ -62,35 +62,40 @@ export async function scrapeImages(categoryNames: string[]) {
       );
 
       // TODO: As soon as we can test this again, implement the above with axios
-    //   await axios({ method: "get", url, responseType: "stream" }).then(
-    //     (response) => {
-    //       if (response.status !== 200) {
-    //         console.log("Error saving image...");
-    //         console.log("Logging error...");
+      //   await axios({ method: "get", url, responseType: "stream" }).then(
+      //     (response) => {
+      //       if (response.status !== 200) {
+      //         console.log("Error saving image...");
+      //         console.log("Logging error...");
 
-    //         errors.push({
-    //           category: category,
-    //           index: i,
-    //           name: images![i]!.name,
-    //           url: images![i]!.url,
-    //         });
+      //         errors.push({
+      //           category: category,
+      //           index: i,
+      //           name: images![i]!.name,
+      //           url: images![i]!.url,
+      //         });
 
-    //         sleep(SLEEP_DURATION);
-    //       } else {
-    //         fs.createWriteStream(filePath);
-    //       }
-    //     }
-    //   );
-    // }
+      //         sleep(SLEEP_DURATION);
+      //       } else {
+      //         fs.createWriteStream(filePath);
+      //       }
+      //     }
+      //   );
+      // }
 
-    sleep(3000);
+      sleep(3000);
+    }
+
+    console.log("Done scraping all images!");
+    console.log("Errors:", JSON.stringify(errors));
+
+    fs.writeFile(
+      "./data/errors.json",
+      JSON.stringify(errors),
+      function (error) {
+        if (error) console.log("Error saving error log:", error);
+        console.log("Created error log successfully");
+      }
+    );
   }
-
-  console.log("Done scraping all images!");
-  console.log("Errors:", JSON.stringify(errors));
-
-  fs.writeFile("./data/errors.json", JSON.stringify(errors), function (error) {
-    if (error) console.log("Error saving error log:", error);
-    console.log("Created error log successfully");
-  });
 }
