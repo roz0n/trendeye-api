@@ -9,8 +9,8 @@ class ImageRipper {
     try {
       // make req to home page
       // return array of links to category pages
-      const request = await axios.get(this.endpoint);
-      const dom = new this.JSDOM(request.data);
+      const response = await axios.get(this.endpoint);
+      const dom = new this.JSDOM(response.data);
       const { document } = dom.window;
       const linkElList = document
         .querySelector("#rightmenu")
@@ -36,10 +36,10 @@ class ImageRipper {
       // get list of every image url on that page
       // replace small for big
       // download the image
-      const request = await axios.get(
+      const response = await axios.get(
         `https://www.trendlist.org/trends/${category}`
       );
-      const dom = new this.JSDOM(request.data);
+      const dom = new this.JSDOM(response.data);
       const { document } = dom.window;
 
       const imageElList = document

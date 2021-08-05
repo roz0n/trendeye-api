@@ -9,8 +9,8 @@ import categoryIdentifiers from "../utils/categoryIdentifiers.util";
 export default class CategoriesController extends ScraperService {
   async getCategoriesList() {
     try {
-      const request = await axios.get(this.url(this.resources.home));
-      const dom = new this.JSDOM(request.data);
+      const response = await axios.get(this.url(this.resources.home));
+      const dom = new this.JSDOM(response.data);
       const { document } = dom.window;
 
       const categoriesList = document.querySelectorAll(
@@ -35,8 +35,8 @@ export default class CategoriesController extends ScraperService {
 
   async getCategoryDescription(name: string) {
     try {
-      const request = await axios.get(this.url(this.resources.trends, name));
-      const dom = new this.JSDOM(request.data);
+      const response = await axios.get(this.url(this.resources.trends, name));
+      const dom = new this.JSDOM(response.data);
       const { document } = dom.window;
 
       const categoryName = categoryIdentifiers[name];
@@ -80,8 +80,8 @@ export default class CategoriesController extends ScraperService {
 
   async getCategoryByName(name: string, limit?: number | undefined) {
     try {
-      const request = await axios.get(this.url(this.resources.trends, name)!);
-      const dom = new this.JSDOM(request.data);
+      const response = await axios.get(this.url(this.resources.trends, name)!);
+      const dom = new this.JSDOM(response.data);
       const { document } = dom.window;
 
       const imageList = document.querySelectorAll(

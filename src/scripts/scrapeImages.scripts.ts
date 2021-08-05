@@ -1,4 +1,6 @@
 import fs from "fs";
+// TODO: Remove got usage: https://stackoverflow.com/questions/60202993/how-to-direct-the-stream-of-an-audio-file-through-express-js-if-it-is-on-another
+// import axios from "axios";
 import got from "got";
 import ImageRipper from "../services/scraper/imageRipper.service";
 import { pipeline } from "stream";
@@ -37,7 +39,7 @@ export async function scrapeImages(categoryNames: string[]) {
         i % 2 === 0 ? "training" : "test"
       }/${category}/${images![i]!.name}.png`;
 
-      sleep(3000); // limit requests so we don't overwhelm the server
+      sleep(3000); // limit requests so we don't overwhelm the server and risk rate-limiting or something else, the site seems brittle
 
       await pipeline(
         got.stream(images![i]!.url),
