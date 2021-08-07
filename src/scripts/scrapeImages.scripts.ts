@@ -3,7 +3,7 @@ import got from "got";
 import ImageRipper from "../services/scraper/imageRipper.service";
 import { pipeline } from "stream";
 
-const SLEEP_DURATION = 3000;
+const SLEEP_DURATION = 2000;
 
 export function sleep(ms: number) {
   return new Promise((resolve) => {
@@ -31,13 +31,11 @@ export async function scrapeImages(categoryNames: string[]) {
     sleep(SLEEP_DURATION);
 
     console.log("Complete!");
-    console.log(`Images for: ${category}:`, images);
+    console.log(`Images for ${category}:`, images);
     console.log(`Last step, scraping images for ${category}...`);
 
     for (let i = 0; i < images!.length; i++) {
-      const filePath = `./data/${
-        i % 2 === 0 ? "training" : "test"
-      }/${category}/${images![i]!.name}.png`;
+      const filePath = `./data/${category}/${images![i]!.name}.png`;
       const url = images![i]!.url;
 
       sleep(SLEEP_DURATION); // limit requests so we don't overwhelm the server and risk rate-limiting or something else, the site seems brittle
@@ -49,6 +47,7 @@ export async function scrapeImages(categoryNames: string[]) {
           if (error) {
             console.log("Error saving image:", error);
             console.log("Logging error...");
+
             errors.push({
               category: category,
               index: i,

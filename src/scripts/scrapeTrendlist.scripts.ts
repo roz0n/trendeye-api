@@ -1,7 +1,44 @@
-import { scrapeCategories } from "./scrapeCategories.scripts";
 import { scrapeImages } from "./scrapeImages.scripts";
 
 (async () => {
-  const categories = await scrapeCategories();
+  const categories = [
+    "left-right-up-down",
+    "various-formats",
+    "exposed-content",
+    "center-aligned",
+    "frame",
+    "ik-blue",
+    "letterspace",
+    "underlined",
+    "staircase",
+    "neon-colors",
+    "slash",
+    "stretched",
+    "scanned",
+    "blank-cover",
+    "flash",
+    "hyphens",
+    "repetition",
+    "type-on-path",
+    "table-of-contents",
+    "slant",
+    "wiggles",
+    "gradients",
+    "text-on-cover",
+    "randomized",
+    "outlined",
+    "highlighted",
+    "strikethrough",
+    "diagonal-pattern",
+    "rhombus",
+    "mickey-hands",
+    "ancient-statues",
+    "infinity-shapes",
+    "still-life",
+    "stars",
+    "diamonds",
+    "3-d",
+    "virtual-space-reality",
+  ];
   await scrapeImages(categories);
 })();
