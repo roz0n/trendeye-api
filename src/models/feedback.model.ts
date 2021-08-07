@@ -1,27 +1,27 @@
 export class FeedbackReport {
   type: string;
   image: string;
-  classifiedIdentifiers: string;
+  classificationResult: string;
+  classificationIdentifiers: string;
   correctIdentifiers: string | null;
   date: string;
   deviceId: string;
-  observationResult: string;
 
   constructor(
     type: string,
     image: string,
-    classifiedIdentifiers: string,
+    classificationResult: string,
+    classificationIdentifiers: string,
     correctIdentifiers: string | null,
     date: string,
-    deviceId: string,
-    observationResult: string
+    deviceId: string
   ) {
     this.type = type;
     this.image = image;
-    this.classifiedIdentifiers = classifiedIdentifiers;
+    this.classificationResult = classificationResult;
+    this.classificationIdentifiers = classificationIdentifiers;
     this.correctIdentifiers = correctIdentifiers;
     this.date = date;
     this.deviceId = deviceId;
-    this.observationResult = observationResult;
   }
 }

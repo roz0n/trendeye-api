@@ -1,5 +1,6 @@
 import "dotenv/config";
 import express from "express";
+import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import { router as studiosRouter } from "./routes/studios.route";
@@ -13,9 +14,23 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(morgan("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+app.use(
+  bodyParser.json({
+    limit: "50mb",
+  })
+);
+
+app.use(
+  bodyParser.urlencoded({
+    limit: "50mb",
+    parameterLimit: 100000,
+    extended: true,
+  })
+);
 
 app.use("/latest", latestRouter);
 app.use("/categories", categoriesRouter);

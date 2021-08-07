@@ -21,19 +21,22 @@ router.post("/", async (req: Request, res: Response) => {
     // Check and deconstruct request body to create report object
     const {
       image,
-      classifiedIdentifiers,
+      classificationResult,
+      classificationIdentifiers,
       correctIdentifiers = null,
       date,
       deviceId,
-      observationResult,
     } = req.body;
+
+    console.log("BODY", req.body);
 
     if (
       !image ||
-      !classifiedIdentifiers ||
+      !classificationResult ||
+      !classificationIdentifiers ||
+      !correctIdentifiers ||
       !date ||
-      !deviceId ||
-      !observationResult
+      !deviceId
     ) {
       throw new Error("Invalid feedback provided");
     }
@@ -41,11 +44,11 @@ router.post("/", async (req: Request, res: Response) => {
     let report = new FeedbackReport(
       type,
       image,
-      classifiedIdentifiers,
+      classificationResult,
+      classificationIdentifiers,
       correctIdentifiers,
       date,
-      deviceId,
-      observationResult
+      deviceId
     );
 
     if (type === FeedbackController.POSITIVE) {
@@ -58,6 +61,7 @@ router.post("/", async (req: Request, res: Response) => {
 
     res.send({ success: true });
   } catch (error) {
+    console.log("ERRRRRRROOOORR", error);
     res.status(500).send({ success: false, message: error.message });
   }
 });
