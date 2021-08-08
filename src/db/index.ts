@@ -7,12 +7,12 @@ const uri = `mongodb+srv://${MONGO_USER}:${MONGO_PASS}@${MONGO_URI}.mongodb.net/
 const db = require("monk")(uri);
 
 db.then(() => {
-  console.log("Successfully connected to MongoDB");
+  console.log("🥭 Successfully connected to database");
 });
 
 process.on("SIGINT", async () => {
   await db.close();
-  console.log("MongoDB connection closed gracefully");
+  console.log("🥭 Database connection closed gracefully");
   process.exit(0);
 });
 

@@ -5,63 +5,45 @@ import { FeedbackReport } from "../models/feedback.model";
 
 const router = Router();
 const controller = new FeedbackController();
+const { POSITIVE, NEGATIVE } = controller;
 
 router.post("/", async (req: Request, res: Response) => {
   try {
-    // Check query to obtain report type
-    let { type } = req.query;
-
-    if (!type) {
-      throw new Error("No feedback type provided");
-    } else {
-      let str = type as String;
-      type = str.toLocaleLowerCase();
-    }
-
-    // Check and deconstruct request body to create report object
     const {
-      image,
-      classificationResult,
-      classificationIdentifiers,
-      correctIdentifiers = null,
-      date,
-      deviceId,
-    } = req.body;
-
-    console.log("BODY", req.body);
-
-    if (
-      !image ||
-      !classificationResult ||
-      !classificationIdentifiers ||
-      !correctIdentifiers ||
-      !date ||
-      !deviceId
-    ) {
-      throw new Error("Invalid feedback provided");
-    }
-
-    let report = new FeedbackReport(
       type,
       image,
-      classificationResult,
-      classificationIdentifiers,
+      classificationResults,
+      incorrectIdentifiers,
       correctIdentifiers,
       date,
-      deviceId
+      deviceInfo,
+    } = req.body;
+
+    if (
+      // I don't really understand TypeScript string literal types, so let's just check like this:
+      type !== POSITIVE ||
+      type !== NEGATIVE ||
+      !type ||
+      !date ||
+      !deviceInfo
+    ) {
+      throw new Error("Malformed feedback data provided");
+    }
+
+    const report = new FeedbackReport(
+      type,
+      image,
+      classificationResults,
+      incorrectIdentifiers,
+      correctIdentifiers,
+      date,
+      deviceInfo
     );
 
-    if (type === FeedbackController.POSITIVE) {
-      await controller.savePositiveFeedback(report);
-    } else if (type === FeedbackController.NEGATIVE) {
-      await controller.saveNegativeFeedback(report);
-    } else {
-      throw new Error("Invalid feedback type provided");
-    }
+    await controller.saveFeedback(report);
 
     res.send({ success: true });
   } catch (error) {
-    console.log("ERRRRRRROOOORR", error);
     res.status(500).send({ success: false, message: error.message });
   }
 });
