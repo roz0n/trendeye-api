@@ -21,8 +21,7 @@ router.post("/", async (req: Request, res: Response) => {
 
     if (
       // I don't really understand TypeScript string literal types, so let's just check like this:
-      type !== POSITIVE ||
-      type !== NEGATIVE ||
+      ![POSITIVE, NEGATIVE].includes(type) ||
       !type ||
       !date ||
       !deviceInfo
@@ -44,6 +43,7 @@ router.post("/", async (req: Request, res: Response) => {
 
     res.send({ success: true });
   } catch (error) {
+    console.log("Error", error);
     res.status(500).send({ success: false, message: error.message });
   }
 });
