@@ -1,7 +1,7 @@
 export class FeedbackReport {
   type: string;
   image: string | null;
-  classificationResults: string | null;
+  classificationResults: string;
   incorrectIdentifiers: string | null;
   correctIdentifiers: string | null;
   date: string;
@@ -10,7 +10,7 @@ export class FeedbackReport {
   constructor(
     type: string,
     image: string | null,
-    classificationResults: string | null,
+    classificationResults: string,
     incorrectIdentifiers: string | null,
     correctIdentifiers: string | null,
     date: string,

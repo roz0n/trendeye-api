@@ -23,6 +23,7 @@ router.post("/", async (req: Request, res: Response) => {
       // I don't really understand TypeScript string literal types, so let's just check like this:
       ![POSITIVE, NEGATIVE].includes(type) ||
       !type ||
+      !classificationResults ||
       !date ||
       !deviceInfo
     ) {
