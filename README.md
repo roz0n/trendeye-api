@@ -1,4 +1,4 @@
-# Unofficial Trendlist.org API
+# Trendeye API
 
 ## Routes
 
