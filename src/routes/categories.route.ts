@@ -3,6 +3,8 @@ import { Router } from "express";
 import cache from "../cache";
 import cacheRoute, { TTL } from "../middleware/cacheRoute.middleware";
 import CategoriesController from "../controllers/categories.controller";
+import { categoryDescriptions } from "../utils/categoryDescriptions.util";
+import { CategoryDescription } from "../models/category.model";
 
 const router = Router();
 const scraper = new CategoriesController();
@@ -20,11 +22,29 @@ router.get("/list", async (req: Request, res: Response) => {
   }
 });
 
+// NOTE: This route scrapes the category description from the Trend List website
+// router.get("/desc/:name", async (req: Request, res: Response) => {
+//   try {
+//     const { name } = req.params;
+//     const response = await scraper.getCategoryDescription(name);
+
+//     cache.setex(req.originalUrl, TTL, JSON.stringify(response));
+//     res.send({ success: true, data: response });
+//   } catch (error) {
+//     res.status(400).send({ success: false, message: error.message });
+//   }
+// });
+
 router.get("/desc/:name", async (req: Request, res: Response) => {
   try {
     const { name } = req.params;
-    const response = await scraper.getCategoryDescription(name);
+    const description = categoryDescriptions[name];
 
+    if (!description) {
+      throw new Error("Invalid category provided");
+    }
+
+    const response = new CategoryDescription(name, description);
     cache.setex(req.originalUrl, TTL, JSON.stringify(response));
     res.send({ success: true, data: response });
   } catch (error) {
