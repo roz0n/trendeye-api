@@ -13,8 +13,8 @@ router.post("/", async (req: Request, res: Response) => {
       type,
       image,
       classificationResults,
-      incorrectIdentifiers,
-      correctIdentifiers,
+      invalidIdentifiers,
+      validIdentifiers,
       date,
       deviceInfo,
     } = req.body;
@@ -34,8 +34,8 @@ router.post("/", async (req: Request, res: Response) => {
       type,
       image,
       classificationResults,
-      incorrectIdentifiers,
-      correctIdentifiers,
+      invalidIdentifiers,
+      validIdentifiers,
       date,
       deviceInfo
     );
