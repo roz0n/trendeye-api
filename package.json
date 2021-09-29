@@ -13,7 +13,7 @@
     "scrape:trendlist": "rm -rf ./data && mkdir ./data && mkdir ./data/training && mkdir ./data/test && npm run scrape:categories && npm run create:folders && node ./dist/scripts/scrapeTrendlist.scripts.js"
   },
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "body-parser": "^1.19.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
